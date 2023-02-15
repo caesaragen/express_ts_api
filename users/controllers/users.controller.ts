@@ -1,29 +1,36 @@
 import express from 'express';
-
+import {UsersService} from '../services/user.services';
 export class UsersController {
-
-    listUsers(req: express.Request, res: express.Response) {
-        res.status(200).send(`List of users`);
+    constructor() {
     }
-
-    getUserById(req: express.Request, res: express.Response) {
-        res.status(200).send(`Get to ${req.params.userId}`);
+listUsers(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        const users = usersService.list(100, 0);
+        res.status(200).send(users);
     }
-
-    createUser(req: express.Request, res: express.Response) {
-        res.status(200).send(`Post to user ${req.params.userId}`);
+getUserById(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        const user = usersService.readById(req.params.userId);
+        res.status(200).send(user);
     }
-
-    patch(req: express.Request, res: express.Response) {
-        res.status(200).send(`Patch to ${req.params.userId}`);
+createUser(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        const userId = usersService.create(req.body);
+        res.status(201).send({id: userId});
     }
-
-    put(req: express.Request, res: express.Response) {
-        res.status(200).send(`Put to ${req.params.userId}`);
+patch(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        usersService.patchById(req.body);
+        res.status(204).send(``);
     }
-
-    removeUser(req: express.Request, res: express.Response) {
-        res.status(200).send(`Delete to ${req.params.userId}`);
+put(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        usersService.updateById(req.body);
+        res.status(204).send(``);
     }
-
+removeUser(req: express.Request, res: express.Response) {
+        const usersService = UsersService.getInstance();
+        usersService.deleteById(req.params.userId);
+        res.status(204).send(``);
+    }
 }
